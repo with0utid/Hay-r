@@ -7,7 +7,7 @@ import sys
 import psycopg2
 TOKEN = config("TOKEN")
 PORT = config("PORT",5000)
-APP = config("APP")
+APP_URL = config("APP_URL")
 #SSL_REQUIRE = bool(config("SSLMODE"))
 DATABASE_URL = config("DATABASE_URL")
 CON = psycopg2.connect(DATABASE_URL)
