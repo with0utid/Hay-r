@@ -86,15 +86,9 @@ def main():
   
   dispatcher.add_handler(tag_handler)
   dispatcher.add_handler(opt_in_handler)
-  
-  
-  
-  if len(sys.argv)>1 and sys.argv[1]=="-l":
-    updater.start_polling()
-  else:
-    updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN)
-    updater.bot.setWebhook(APP_URL+"/"+TOKEN)
-    updater.idle()
+  updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN) 
+  updater.bot.setWebhook(APP_URL+"/"+TOKEN)
+  updater.idle()
 if __name__ == '__main__':
     main()
   
