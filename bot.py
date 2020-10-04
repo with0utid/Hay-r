@@ -8,29 +8,24 @@ import psycopg2
 TOKEN = config("TOKEN")
 PORT = config("PORT",5000)
 APP_URL = config("APP_URL")
-#SSL_REQUIRE = bool(config("SSLMODE"))
 DATABASE_URL = config("DATABASE_URL")
-CON = psycopg2.connect(DATABASE_URL)
+CON = psycopg2.connect(DATABASE_URL,sslmode='require')
 CURS = CON.cursor()
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname) - %(message)')
 def insert_query(query):
-  try:
       CURS.execute(query)
       res = CON.commit()
       return 1
-  except:
-      return 0
 def fetch_query(query):
   CURS.execute(query)
   res = CURS.fetchall()
   return res
   
 def tag_all(update,context):
-  if update.message.chat.type=="group":
+  if update.message.chat.type in ["group","supergroup"] :
     update.message.reply_text("Tagging everyone")
     group_id = update.message.chat_id
     query = f"SELECT member_id, first_name FROM chat_ids WHERE group_id='{group_id}';"
-    print(query)
     try:
       members = fetch_query(query)
       print(members)
@@ -38,7 +33,7 @@ def tag_all(update,context):
       for member in members:
         member_id,first_name=member
         tagging_message+=mention_markdown(int(member_id),first_name)
-    
+        tagging_message+=" "
     except:
        tagging_message = "Sorry I am Unable to tag anyone"
     update.message.reply_text(tagging_message,parse_mode="Markdown")
@@ -48,14 +43,12 @@ def tag_all(update,context):
 def opt_in(update,context):
   def is_already_opted(group_id, member_id):
     query = f"SELECT COUNT(*) FROM chat_ids WHERE group_id='{group_id}' and member_id='{member_id}';"
-    print(query)
     count = fetch_query(query)
-    print(count)
     if count[0][0]>0:
       return True
     else:
       return False
-  if update.message.chat.type=="group":
+  if update.message.chat.type in ["group","supergroup"]:
     group_id = update.message.chat_id
     member_id = update.message.from_user.id
     username = update.message.from_user.username
@@ -64,8 +57,7 @@ def opt_in(update,context):
     if is_already_opted(group_id,member_id):
       update.message.reply_text("You are already opted for this")
       return
-    query = f"INSERT INTO chat_ids (group_id,group_name, member_id, username,first_name) VALUES({group_id},'{group_name}',{member_id},'{username}','{first_name}');"
-    print(query)
+    query = f"INSERT INTO chat_ids (group_id,group_name, member_id, username,first_name) VALUES('{group_id}','{group_name}','{member_id}','{username}','{first_name}');"
     if insert_query(query):
       update.message.reply_text("You are successfully opted in to get metioned by this bot")
     else:
