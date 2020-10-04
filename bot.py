@@ -11,7 +11,8 @@ APP_URL = config("APP_URL")
 DATABASE_URL = config("DATABASE_URL")
 CON = psycopg2.connect(DATABASE_URL,sslmode='require')
 CURS = CON.cursor()
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname) - %(message)')
+
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname) - %(process) - %(message)')
 def insert_query(query):
       CURS.execute(query)
       res = CON.commit()
