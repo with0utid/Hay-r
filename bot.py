@@ -30,6 +30,19 @@ def is_already_opted(group_id, member_id):
       return True
     else:
       return False
+      
+      
+def add_to_database(update,group,member):
+   group_id = group.id
+   group_name = group.name
+   member_id = member.id
+   username = member.username
+   first_name = member.first_name
+   query = f"INSERT INTO chat_ids (group_id,group_name, member_id, username,first_name) VALUES('{group_id}','{group_name}','{member_id}','{username}','{first_name}');"
+   if insert_query(query):
+      update.message.reply_text(text=f"{mention_markdown(int(member_id),first_name)} successfully opted in to get metioned in {group_name}", parsemode="Markdown")
+   else:
+      update.message.reply_text("Sorry Something bad happened")
 def tag_all(update,context):
   if update.message.chat.type in ["group","supergroup"] :
     update.message.reply_text("Tagging everyone")
@@ -51,20 +64,12 @@ def tag_all(update,context):
 
 def opt_in(update,context):
   if update.message.chat.type in ["group","supergroup"]:
-    group_id = update.message.chat_id
-    member_id = update.message.from_user.id
-    username = update.message.from_user.username
-    first_name = update.message.from_user.first_name
-    group_name = update.message.chat.title
-    if is_already_opted(group_id,member_id):
+    group = update.message.chat
+    member  = update.message.from_user
+    if is_already_opted(group.id,member.id):
       update.message.reply_text("You are already opted for this")
       return
-    query = f"INSERT INTO chat_ids (group_id,group_name, member_id, username,first_name) VALUES('{group_id}','{group_name}','{member_id}','{username}','{first_name}');"
-    if insert_query(query):
-      update.message.reply_text("You are successfully opted in to get metioned by this bot")
-    else:
-      update.message.reply_text("Sorry Something bad happened")
-      
+    add_to_database(update, group,member)
   else:
     update.message.reply_text("This command is not for private chat")
     
@@ -100,11 +105,7 @@ def add_data(update, context):
      update.message.reply_text(text=f"{mention_markdown(member_id,first_name)} is already opted for mention in {group_name}.",parse_mode="Markdown")
      return
   else:
-     query = f"INSERT INTO chat_ids (group_id,group_name, member_id, username,first_name) VALUES('{group_id}','{group_name}','{member_id}','{username}','{first_name}');"
-     if insert_query(query):
-       update.message.reply_text(text=f"{mention_markdown(member_id,first_name)} is successfully opted in to get metioned by this bot", parsemode="Markdown")
-     else:
-       update.message.reply_text("Sorry Something bad happened")
+     add_to_database(update,group,chat)
        
 def main():
   updater = Updater(token=TOKEN,use_context=True)
@@ -117,6 +118,7 @@ def main():
   dispatcher.add_handler(tag_handler)
   dispatcher.add_handler(opt_in_handler)
   dispatcher.add_handler(man_opt_handler)
+ # dispatcher.add_handler(forward_opt_handler)
   updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN) 
   updater.bot.setWebhook(APP_URL+"/"+TOKEN)
   updater.idle()
