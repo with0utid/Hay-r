@@ -1,6 +1,6 @@
 from telegram.ext import Updater , CommandHandler ,Filters , MessageHandler
 from telegram.utils.helpers import mention_markdown
-from telegram import ReplyKeyboardMarkup, InlineKeyboardButton
+from telegram import ReplyKeyboardMarkup,ReplyKeyboardRemove, InlineKeyboardButton
 import logging
 from decouple import config
 import os
@@ -129,8 +129,12 @@ def forward_handler(update,context):
     print(update.message.chat.type)
     return
   chat_id = update.message.chat_id
-  if chat_id not in CHAT_IDS:
-    update.message.reply_text("First go to any group and send /add_by_message command there , then click on the link and forward me message of any member to add them to database")
+  if chat_id not in CHAT_IDS or CHAT_IDS[chat_id] is None:
+    #update.message.reply_text("First go to any group and send /add_by_message command there , then click on the link and forward me message of any member to add them to database")
+    return
+  if update.message.text=="Done👍":
+    update.message.reply_text(text="Okay :)",reply_markup=ReplyKeyboardRemove())
+    CHAT_IDS[chat_id] =None
     return
   if update.message.forward_from is None:
     update.message.reply_text("I can't add this member. Either you haven't forward message or user is not accessible by me because of privacy (add link to forwarded messages)")
