@@ -158,7 +158,17 @@ def get_status(update, context):
     first_names = fetch_query(query)
     print(first_names)
   
-  
+def tag_admins(update,context):
+  group = update.message.chat
+  if group=='private':
+    update.message.reply_text("Sorry, this command is only available for group or supergroup")
+    return
+  admins = [i.user for i in group.get_administrators()]
+  message = ""
+  for admin in admins:
+    message+=f" {mention_markdown(admin.id,admin.first_name)}"
+  print(message)
+  update.message.reply_text(text=message,parse_mode="Markdown")
 def main():
   updater = Updater(token=TOKEN,use_context=True)
   dispatcher = updater.dispatcher
@@ -168,8 +178,9 @@ def main():
   opt_in_handler = CommandHandler("opt_in",opt_in)
   man_opt_handler = MessageHandler(Filters.regex(re.compile("^add",re.IGNORECASE)),add_data)
   forward_opt_handler = CommandHandler('add_by_message',add_by_message)
-  forward_message_handler = MessageHandler(Filters.all,forward_handler)
+  forward_message_handler = MessageHandler(Filters.all and (~Filters.command),forward_handler)
   status_handler = CommandHandler('get_status',get_status)
+  admin_tagger = CommandHandler('tag_admins',tag_admins)
   
   dispatcher.add_handler(start_handler)
   dispatcher.add_handler(tag_handler)
@@ -177,6 +188,7 @@ def main():
   dispatcher.add_handler(man_opt_handler)
   dispatcher.add_handler(forward_opt_handler)
   dispatcher.add_handler(forward_message_handler)
+  dispatcher.add_handler(admin_tagger)
 #  dispatcher.add_handler(status_handler)
   if len(sys.argv)>1 and sys.argv[1]=="-p":
     print("start polling")
