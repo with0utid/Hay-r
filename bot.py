@@ -174,7 +174,7 @@ def main():
   dispatcher = updater.dispatcher
   
   start_handler = CommandHandler('start',start)
-  tag_handler = CommandHandler("tag_all",tag_all)
+  tag_handler = CommandHandler(["tagAll","tag_all"],tag_all)
   opt_in_handler = CommandHandler("opt_in",opt_in)
   man_opt_handler = MessageHandler(Filters.regex(re.compile("^add",re.IGNORECASE)),add_data)
   forward_opt_handler = CommandHandler('add_by_message',add_by_message)
