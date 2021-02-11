@@ -1,4 +1,6 @@
 FROM python:3.9
 WORKDIR app/
-RUN pip instal -r requirements.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY bot.py .
 CMD ['python','bot.py']
