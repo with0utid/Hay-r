@@ -6,12 +6,12 @@ from decouple import config
 TOKEN = config("TOKEN")
 APP_ID = config("APP_ID")
 API_HASH = config("API_HASH")
-
+PORT = int(config("PORT", 5000))
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(message)s",
     level=logging.INFO,
 )
-bot = TelegramClient('SuperTagger', APP_ID, API_HASH)
+bot = TelegramClient('SuperTagger', APP_ID, API_HASH, local_addr=("0.0.0.0", PORT))
 
 @bot.on(events.NewMessage(pattern="/start$"))
 async def start(update, context):
