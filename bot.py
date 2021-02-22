@@ -11,7 +11,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(message)s",
     level=logging.INFO,
 )
-bot = TelegramClient('SuperTagger', APP_ID, API_HASH, proxy=("socks5", '127.0.0.1', PORT))
+bot = TelegramClient('SuperTagger', APP_ID, API_HASH, proxy=("socks5", '0.0.0.1', int(PORT))
 
 @bot.on(events.NewMessage(pattern="/start$"))
 async def start(update, context):
