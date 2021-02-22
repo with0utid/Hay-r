@@ -15,8 +15,8 @@ bot = TelegramClient('SuperTagger', APP_ID, API_HASH, proxy=("socks5", '0.0.0.0'
 
 @bot.on(events.NewMessage(pattern="/start$"))
 async def start(event):
-  if event.is_private:
-      event.respond("👍😊")
+    if event.is_private:
+        event.respond("👍😊")
 
 @bot.on(events.NewMessage(pattern=lambda x: "/tag" in x.lower() and "admin" not in x.lower(), incoming=True))
 async def tag_all(event):
