@@ -46,10 +46,6 @@ async def tag_admin(event):
         await event.client.send_message(event.chat_id, text, reply_to=event.reply_to_msg_id)
     else:
         await event.reply(text)
-    try:
-        await event.delete()
-    except Exception:
-        pass
     raise StopPropagation
 
 def main():
