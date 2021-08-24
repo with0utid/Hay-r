@@ -1,0 +1,39 @@
+{
+    "name": "TagAdminsBot",
+    "repository": "https://github.com/SkuzzyxD/TagAdminsBot",
+    "description": "A simple bot to call all admins in a Group!",
+    "keywords": [
+        "pyrogram",
+        "telegram",
+        "pyrogram bot",
+        "telegram bot",
+        "Tag Admins Bot",
+        "Tag admins telegram"
+    ],
+    "website": "https://skuzzers.xyz/",
+    "success_url": "https://t.me/Skuzzers",
+    "env": {
+        "APP_ID": {
+            "description": "Your APP_ID fromm my.telegram.org",
+            "required": true,
+            "value": ""
+        },
+        "API_HASH": {
+            "description": "Your API_HASH fromm my.telegram.org",
+            "required": true,
+            "value": ""
+        },
+        "TG_BOT_TOKEN": {
+            "description": "Your Bot API Token",
+            "required": true,
+            "value": ""
+        },
+        
+    },
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    }
+}
