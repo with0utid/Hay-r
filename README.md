@@ -1,5 +1,5 @@
-# super-tagger-bot
-https://t.me/super-tager-bot
+
+
 
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/with0utid/super-tagger-bot )
